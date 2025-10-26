@@ -1,4 +1,5 @@
 <?php
+// Local: app/Http/Kernel.php
 
 namespace App\Http;
 
@@ -8,9 +9,6 @@ class Kernel extends HttpKernel
 {
     /**
      * Os middlewares globais da aplicação.
-     *
-     * Estes middlewares são executados em TODAS as requisições.
-     *
      * @var array<int, class-string|string>
      */
     protected $middleware = [
@@ -25,7 +23,6 @@ class Kernel extends HttpKernel
 
     /**
      * Os grupos de middleware da aplicação.
-     *
      * @var array<string, array<int, class-string|string>>
      */
     protected $middlewareGroups = [
@@ -37,7 +34,6 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
-
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
@@ -47,7 +43,6 @@ class Kernel extends HttpKernel
 
     /**
      * Os "apelidos" (aliases) dos middlewares que podem ser usados nas rotas.
-     *
      * @var array<string, class-string|string>
      */
     protected $middlewareAliases = [
@@ -59,18 +54,17 @@ class Kernel extends HttpKernel
         'prepend' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class, // (Mesmo que não o usemos, mantemos o alias)
 
-        /*
-        |--------------------------------------------------------------------------
-        | Nossos Middlewares de Perfil (Role)
-        |--------------------------------------------------------------------------
-        |
-        | Estes são os apelidos que criámos para proteger as nossas rotas
-        | de Doador e Instituição.
-        |
-        */
         'role.instituicao' => \App\Http\Middleware\CheckRoleInstituicao::class,
         'role.doador' => \App\Http\Middleware\CheckRoleDoador::class,
     ];
+    protected $routeMiddleware = [
+    'auth' => \App\Http\Middleware\Authenticate::class,
+    'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+    'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    'role.instituicao' => \App\Http\Middleware\CheckRoleInstituicao::class,
+    'role.doador' => \App\Http\Middleware\CheckRoleDoador::class,
+];
+
 }

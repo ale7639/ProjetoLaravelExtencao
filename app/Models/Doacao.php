@@ -5,13 +5,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; // <-- ADICIONAR IMPORT
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Doacao extends Model
 {
     use HasFactory;
 
-    // ... (propriedade $fillable já existente)
+    protected $table = 'doacoes';
+    
     protected $fillable = [
         'instituicao_id',
         'doador_id',
@@ -21,20 +22,10 @@ class Doacao extends Model
         'itens_doados',
         'data_doacao',
     ];
-
-    // --- ADICIONE ESTES MÉTODOS ---
-
-    /**
-     * Define a relação: Uma doação pertence a um Doador (User).
-     */
     public function doador(): BelongsTo
     {
         return $this->belongsTo(User::class, 'doador_id');
     }
-
-    /**
-     * Define a relação: Uma doação pertence a uma Instituição (User).
-     */
     public function instituicao(): BelongsTo
     {
         return $this->belongsTo(User::class, 'instituicao_id');

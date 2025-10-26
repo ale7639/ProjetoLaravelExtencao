@@ -1,5 +1,9 @@
 <?php
+// Local: routes/web.php
+
 use Illuminate\Support\Facades\Route;
+
+// Imports de todos os Controllers que estamos a usar
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EstoqueController;
 use App\Http\Controllers\DoacaoController;
@@ -7,105 +11,24 @@ use App\Http\Controllers\DoadorController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InstituicaoDashboardController;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
 
-
-// Local: routes/web.php
-
-// ... (imports)
-
-
-Route::get('/dashboard', [InstituicaoDashboardController::class, 'index'])
-     ->middleware(['auth', 'verified', 'role.instituicao'])
-     ->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    // ... (rotas de profile e doacoes)
-
-    // Grupo de rotas para o Estoque
-    Route::prefix('estoque')->name('estoque.')->group(function () {
-
-        // (Rotas existentes)
-        Route::get('/', [EstoqueController::class, 'index'])->name('index');
-        Route::get('/create', [EstoqueController::class, 'create'])->name('create');
-        Route::post('/', [EstoqueController::class, 'store'])->name('store');
-
-        // --- ADICIONE ESTAS LINHAS ---
-
-        // Rota para mostrar o formulário de edição (ex: /estoque/5/edit)
-        // {estoque} é um parâmetro dinâmico (o ID do item)
-        Route::get('/{estoque}/edit', [EstoqueController::class, 'edit'])->name('edit');
-
-        // Rota para salvar as alterações (método PUT)
-        Route::put('/{estoque}', [EstoqueController::class, 'update'])->name('update');
-
-        // Rota para deletar o item (método DELETE)
-        Route::delete('/{estoque}', [EstoqueController::class, 'destroy'])->name('destroy');
-
-
-        Route::get('/doador/dashboard', [DoadorController::class, 'index'])
-     ->middleware(['auth', 'verified'])
-     ->name('doador.dashboard');
-
-     Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// --- ADICIONE ESTA ROTA DE REDIRECIONAMENTO ---
-Route::get('/home', [HomeController::class, 'index'])
-     ->middleware(['auth', 'verified'])
-     ->name('home');
-
-        // --- FIM DA ADIÇÃO ---
-    });
-
-    // ... (rotas de doacoes)
+// --- Rota Pública Principal ---
+Route::get('/', function () {
+    return view('welcome');
 });
 
-
-Route::middleware(['auth', 'verified'])->group(function () {
-
-    // Dashboard do Doador (Já existe)
-    Route::get('/doador/dashboard', [DoadorController::class, 'index'])
-         ->name('doador.dashboard');
-
-    // --- ADICIONE ESTAS LINHAS ---
-
-    // Rota para mostrar o formulário de Adicionar Doação (Doador)
-    Route::get('/doador/doacoes/create', [DoadorController::class, 'createDoacao'])
-         ->name('doador.doacoes.create');
-
-    // Rota para salvar a nova doação (Doador)
-    Route::post('/doador/doacoes', [DoadorController::class, 'storeDoacao'])
-         ->name('doador.doacoes.store');
-
-    // (Futuramente, a rota do Histórico do Doador virá aqui)
-
-
-
-    Route::middleware(['auth', 'verified'])->group(function () {
-
-    // ... (rotas doador.dashboard, doador.doacoes.create, doador.doacoes.store)
-
-    // --- ADICIONE ESTA LINHA ---
-    // Rota para o Histórico de Doações (Doador)
-    Route::get('/doador/historico', [DoadorController::class, 'historico'])
-         ->name('doador.historico');
-
-});
-
-
-
-    Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified', 'role.instituicao']) // <-- ADICIONAR AQUI
-   ->name('dashboard');
-
-// ROTA DE REDIRECIONAMENTO (não precisa de proteção de role)
+// --- Rota de Redirecionamento Pós-Login ---
+// 'verified' REMOVIDO DAQUI
 Route::get('/home', [HomeController::class, 'index'])
-     ->middleware(['auth', 'verified'])
+     ->middleware(['auth'])
      ->name('home');
 
-// ROTA DE PERFIL (não precisa de proteção de role, é para todos)
+// --- Rota de Perfil (Comum a todos) ---
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -113,9 +36,15 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// --- Rotas da INSTITUIÇÃO ---
-// Adicionar o middleware 'role.instituicao' a este grupo
-Route::middleware(['auth', 'verified', 'role.instituicao'])->group(function () {
+// =========================================================================
+// --- GRUPO DE ROTAS DA INSTITUIÇÃO ---
+// =========================================================================
+// 'verified' REMOVIDO DAQUI
+Route::middleware(['auth', 'role.instituicao'])->group(function () { // <-- VERIFIQUE ISTO
+    
+    // Dashboard principal da Instituição
+    Route::get('/dashboard', [InstituicaoDashboardController::class, 'index'])
+         ->name('dashboard');
 
     // Grupo de rotas para o Estoque
     Route::prefix('estoque')->name('estoque.')->group(function () {
@@ -127,7 +56,7 @@ Route::middleware(['auth', 'verified', 'role.instituicao'])->group(function () {
         Route::delete('/{estoque}', [EstoqueController::class, 'destroy'])->name('destroy');
     });
 
-    // Grupo de rotas para Doações (da Instituição)
+    // Grupo de rotas para Doações (Recebidas pela Instituição)
     Route::prefix('doacoes')->name('doacoes.')->group(function () {
         Route::get('/', [DoacaoController::class, 'index'])->name('index');
         Route::get('/create', [DoacaoController::class, 'create'])->name('create');
@@ -137,24 +66,30 @@ Route::middleware(['auth', 'verified', 'role.instituicao'])->group(function () {
 });
 
 
-// --- Rotas do DOADOR ---
-// Adicionar o middleware 'role.doador' a este grupo
-Route::middleware(['auth', 'verified', 'role.doador'])->group(function () {
-
+// =========================================================================
+// --- GRUPO DE ROTAS DO DOADOR ---
+// =========================================================================
+// 'verified' REMOVIDO DAQUI
+Route::middleware(['auth', 'role.doador'])->group(function () {
+    
+    // Dashboard principal do Doador
     Route::get('/doador/dashboard', [DoadorController::class, 'index'])
          ->name('doador.dashboard');
 
+    // Formulário para o Doador registar uma doação
     Route::get('/doador/doacoes/create', [DoadorController::class, 'createDoacao'])
          ->name('doador.doacoes.create');
 
+    // Salvar a doação feita pelo Doador
     Route::post('/doador/doacoes', [DoadorController::class, 'storeDoacao'])
          ->name('doador.doacoes.store');
-
+    
+    // Página de histórico de doações do Doador
     Route::get('/doador/historico', [DoadorController::class, 'historico'])
          ->name('doador.historico');
-
+    
 });
 
-});
 
+// --- Ficheiro de Rotas de Autenticação ---
 require __DIR__.'/auth.php';

@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Registro de Doação') }} </h2>
+            {{ __('Registro de Doação') }}
+        </h2>
     </x-slot>
 
     <div class="py-12">
@@ -24,7 +25,7 @@
                             <label for="doador_endereco" class="block font-medium text-sm text-gray-700">Endereço</label>
                             <input type="text" name="doador_endereco" id="doador_endereco" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
-
+                        
                         <div class="mt-4">
                             <label for="data_doacao" class="block font-medium text-sm text-gray-700">Data da Doação</E-mail>
                             <input type="date" name="data_doacao" id="data_doacao" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>

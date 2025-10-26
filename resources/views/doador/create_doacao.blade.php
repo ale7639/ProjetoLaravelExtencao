@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-
+                    
                     <form method="POST" action="{{ route('doador.doacoes.store') }}">
                         @csrf
 
@@ -19,7 +19,7 @@
                             </label>
                             <select name="instituicao_id" id="instituicao_id" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
                                 <option value="">Selecione uma instituição</option>
-
+                                
                                 @foreach ($instituicoes as $instituicao)
                                     <option value="{{ $instituicao->id }}">
                                         {{ $instituicao->name }}

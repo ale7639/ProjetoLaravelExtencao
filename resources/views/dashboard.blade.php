@@ -34,7 +34,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div class="bg-white p-6 rounded-lg shadow">
                     <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                        Total de Itens no Estoque [cite: 105]
+                        Total de Itens no Estoque
                     </h4>
                     <p class="text-3xl font-semibold text-gray-900 mt-2">
                         {{ $totalEstoque }}
@@ -43,7 +43,7 @@
 
                 <div class="bg-white p-6 rounded-lg shadow">
                     <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                        Total de Doadores Registrados [cite: 112]
+                        Total de Doadores Registrados
                     </h4>
                     <p class="text-3xl font-semibold text-gray-900 mt-2">
                         {{ $totalDoadores }}

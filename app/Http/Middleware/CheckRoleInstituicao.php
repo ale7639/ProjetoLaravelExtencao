@@ -1,27 +1,26 @@
 <?php
 // Local: app/Http/Middleware/CheckRoleInstituicao.php
 
-namespace App\Http\Middleware;
+namespace App\Http\Middleware; // <-- VERIFIQUE ISTO
 
 use Closure;
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // Importar Auth
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckRoleInstituicao
+class CheckRoleInstituicao // <-- VERIFIQUE ISTO
 {
     /**
      * Handle an incoming request.
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // 1. Verifica se o utilizador está logado E se o seu 'role' é 'instituicao'
+        // Esta lógica parece correta, o problema é o Laravel "encontrar" o ficheiro
         if (Auth::check() && Auth::user()->role === 'instituicao') {
-            // 2. Se for, permite que o pedido continue
             return $next($request);
         }
 
-        // 3. Se não for, redireciona-o para a 'home' (que o enviará para o dashboard correto)
         return redirect()->route('home');
     }
 }

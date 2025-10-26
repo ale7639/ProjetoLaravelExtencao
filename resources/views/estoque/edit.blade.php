@@ -11,7 +11,8 @@
                 <div class="p-6 text-gray-900">
 
                     <form method="POST" action="{{ route('estoque.update', $estoque->id) }}">
-                        @csrf @method('PUT')
+                        @csrf
+                        @method('PUT')
 
                         <div>
                             <label for="item_nome" class="block font-medium text-sm text-gray-700">Nome do Item</label>

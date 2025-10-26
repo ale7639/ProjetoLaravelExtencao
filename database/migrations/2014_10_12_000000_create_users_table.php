@@ -11,29 +11,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-
-            // Campo "Nome completo" [cite: 18] ou "Nome da instituição" [cite: 26]
+            
             $table->string('name'); 
-
-            // Campo "E-mail" [cite: 20, 29]
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-
-            // Campo "Senha" [cite: 34]
             $table->string('password');
-
-            // Campo "CPF/CNPJ" [cite: 19, 27]
+            
+            // --- Campos Adicionados ---
             $table->string('documento')->unique()->nullable(); // CPF ou CNPJ
-
-            // Campo "Telefone" [cite: 21, 29]
             $table->string('telefone')->nullable();
-
-            // Campo "Endereço" [cite: 22, 30]
             $table->string('endereco')->nullable();
-
-            // Campo para definir o perfil 
-            // 'doador' ou 'instituicao'
-            $table->string('role')->default('doador'); 
+            $table->string('role')->default('doador'); // 'doador' ou 'instituicao'
+            // --- Fim dos Campos Adicionados ---
 
             $table->rememberToken();
             $table->timestamps();
